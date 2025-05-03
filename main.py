@@ -1,8 +1,10 @@
 from random import randint
-
-from flask import Flask
+from flask import Flask, request
+from PIL import Image
+from model import get_saved_model, get_class_labels
 
 app = Flask(__name__)
+model = get_saved_model()
 
 
 @app.route('/')
@@ -20,9 +22,19 @@ def hello():
     return 'Hello Arduino!'
 
 
-def main():
-    app.run(debug=True, host='192.168.74.175', port=8000)
+def get_image():
+    # go to camera web server and grab image
+    ...
 
+
+@app.route("/class", methods=['POST'])
+def classify_image() -> int:
+    return 0
+
+
+
+def main():
+    app.run(debug=True, host='localhost', port=5000)
 
 if __name__ == '__main__':
     main()
