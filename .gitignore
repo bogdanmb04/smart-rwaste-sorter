@@ -188,3 +188,4 @@ images
 output
 coco_eval
 making_network.ipynb
+custom_test_images
