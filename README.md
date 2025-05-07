@@ -20,6 +20,8 @@ Where:
 - Based on the class with the highest confidence within the model, the server sends over a signal to the Arduino board
 - The Arduino lights up an LED corresponding to the server's response
 
+The server is made using [Flask](https://flask.palletsprojects.com/en/stable/). Although not the most secure, for a proof-of-concept project - it works just fine.
+
 ## Recycling Detectron
 
 A detectron2 model trained in order to classify recyclable waste. Uses the [Trashnet](https://github.com/garythung/trashnet) dataset for its training images.
@@ -33,7 +35,6 @@ When deployed, the model can detect waste from the following categories:
 3. Metal
 4. Glass
 5. Plastic
-6. Trash
 
 To simplify the real-life aspect of sorting recyclable trash (and because this is only a proof-of-concept project), the following table groups up the class labels together:
 
@@ -42,7 +43,6 @@ To simplify the real-life aspect of sorting recyclable trash (and because this i
 | Blue        | Paper, Cardboard  |
 | Yellow      | Plastic, Metal    |
 | Green       | Glass             |
-| Red         | Trash             |
 
 The server sends a message to an Arduino board in order to signal the detected class. A LED with a color corresponding to the super label of the detected class will light up!
 
