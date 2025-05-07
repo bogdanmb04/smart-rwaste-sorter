@@ -184,8 +184,8 @@ fabric.properties
 # idea folder, uncomment if you don't need it
 .idea
 
+#custom for project
 images
 output
 coco_eval
-making_network.ipynb
-custom_test_images
+camera_setup/arduino_secrets.h
