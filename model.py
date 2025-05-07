@@ -16,4 +16,4 @@ def get_saved_model() -> DefaultPredictor:
     return DefaultPredictor(cfg)
 
 def get_class_labels() -> List[str]:
-    return ['idk', 'cardboard', 'glass', 'metal', 'paper', 'plastic', 'trash']
+    return ['idk', 'cardboard', 'glass', 'metal', 'paper', 'plastic']

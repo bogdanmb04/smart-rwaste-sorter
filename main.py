@@ -45,17 +45,17 @@ def get_image() -> np.ndarray:
 def classify_image():
     img: np.ndarray  = get_image()
     out = model(img)
-    v = Visualizer(img[:,:,::-1], metadata=test_metadata)
-    v = v.draw_instance_predictions(out["instances"].to("cpu"))
-    cv2.imshow("image", v.get_image())
-    cv2.waitKey(0)
-    cv2.destroyAllWindows()
+    # v = Visualizer(img[:,:,::-1], metadata=test_metadata)
+    # v = v.draw_instance_predictions(out["instances"].to("cpu"))
+    # cv2.imshow("image", v.get_image())
+    # cv2.waitKey(0)
+    # cv2.destroyAllWindows()
     labels = get_class_labels()
     if len(out['instances'].pred_classes) != 0:
         class_idx = out['instances'].pred_classes[0]
         return labels[class_idx]
     else:
-        return "idk"
+        return labels[0]
 
 
 
