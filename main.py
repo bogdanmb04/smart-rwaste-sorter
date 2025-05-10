@@ -21,16 +21,6 @@ def home():
     return 'Welcome!'
 
 
-@app.route('/random')
-def get_random():
-    return str(randint(1, 3))
-
-
-@app.route('/hello')
-def hello():
-    return 'Hello Arduino!'
-
-
 def get_image() -> np.ndarray:
     # go to camera web server and grab image
     # static camera web server address: 192.168.74.12/cam-hi.jpg
@@ -41,15 +31,15 @@ def get_image() -> np.ndarray:
     img_arr = np.asarray(image)
     return img_arr
 
+
 @app.route("/class", methods=['GET'])
 def classify_image():
     img: np.ndarray  = get_image()
     out = model(img)
+    # only here for quick testing, not meant to actually be displayed!
     # v = Visualizer(img[:,:,::-1], metadata=test_metadata)
     # v = v.draw_instance_predictions(out["instances"].to("cpu"))
     # cv2.imshow("image", v.get_image())
-    # cv2.waitKey(0)
-    # cv2.destroyAllWindows()
     labels = get_class_labels()
     if len(out['instances'].pred_classes) != 0:
         class_idx = out['instances'].pred_classes[0]
