@@ -1,4 +1,3 @@
-from random import randint
 import numpy as np
 import requests
 from detectron2.data import MetadataCatalog
@@ -6,7 +5,6 @@ from detectron2.data.datasets import register_coco_instances
 from detectron2.utils.visualizer import Visualizer
 from flask import Flask, request
 from PIL import Image
-import torch
 from model import get_saved_model, get_class_labels
 import cv2
 from io import BytesIO
