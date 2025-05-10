@@ -188,4 +188,4 @@ fabric.properties
 images
 output
 coco_eval
-camera_setup/arduino_secrets.h
+*/arduino_secrets.h
