@@ -21,9 +21,8 @@ def home():
 
 def get_image() -> np.ndarray:
     # go to camera web server and grab image
-    # static camera web server address: 192.168.74.12/cam-hi.jpg
-    esp_url: str = "http://192.168.74.12/cam-hi.jpg"
-    resp = requests.get(esp_url, timeout=5)
+    esp_url: str = "http://192.168.139.12/cam-hi.jpg"
+    resp = requests.get(esp_url, timeout=10)
     resp.raise_for_status()
     image = Image.open(BytesIO(resp.content))
     img_arr = np.asarray(image)
@@ -47,7 +46,7 @@ def classify_image():
 
 
 def main():
-    app.run(debug=True, host='192.168.74.175', port=5000)
+    app.run(debug=True, host='0.0.0.0', port=5000)
 
 if __name__ == '__main__':
     main()
