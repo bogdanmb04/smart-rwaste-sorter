@@ -21,7 +21,7 @@ def home():
 
 def get_image() -> np.ndarray:
     # go to camera web server and grab image
-    esp_url: str = "http://192.168.139.12/cam-hi.jpg"
+    esp_url: str = "http://my_camera_url"
     resp = requests.get(esp_url, timeout=10)
     resp.raise_for_status()
     image = Image.open(BytesIO(resp.content))
