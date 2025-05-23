@@ -1,7 +1,7 @@
 #include <WebServer.h>
 #include <WiFi.h>
 #include <esp32cam.h>
-#include "../arduino_secrets.h"
+#include "arduino_secrets.h"
  
 const char* WIFI_SSID = MY_SECRET_SSID;
 const char* WIFI_PASS = MY_SECRET_PASSWORD;
@@ -13,10 +13,10 @@ static auto loRes = esp32cam::Resolution::find(320, 240);
 static auto midRes = esp32cam::Resolution::find(350, 530);
 static auto hiRes = esp32cam::Resolution::find(1600, 1200);
 
-const char* my_ip = "192.168.74.12";
-IPAddress staticIP(192, 168, 74, 12);
-IPAddress gateway(192, 168, 1, 1);
-IPAddress subnet(255, 255, 255, 0);
+//const char* my_ip = "192.168.74.12";
+//IPAddress staticIP(192, 168, 74, 12);
+//IPAddress gateway(192, 168, 1, 1);
+//IPAddress subnet(255, 255, 255, 0);
 
 void serveJpg()
 {
@@ -76,13 +76,12 @@ void  setup(){
   }
   WiFi.persistent(false);
   WiFi.mode(WIFI_STA);
-  WiFi.config(staticIP, gateway, subnet);
   WiFi.begin(WIFI_SSID, WIFI_PASS);
   while (WiFi.status() != WL_CONNECTED) {
     delay(500);
   }
   Serial.print("http://");
-  Serial.println(my_ip);
+  Serial.println(WiFi.localIP());
   Serial.println("  /cam-lo.jpg");
   Serial.println("  /cam-hi.jpg");
   Serial.println("  /cam-mid.jpg");
