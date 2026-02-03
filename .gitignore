@@ -190,3 +190,4 @@ output
 coco_eval
 */arduino_secrets.h
 arduino_setup/esp_board
+*/iot_configs.h

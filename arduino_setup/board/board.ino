@@ -1,6 +1,9 @@
 #include <WiFiS3.h>
 #include <ArduinoHttpClient.h>
 #include <Stepper.h>
+#include <WiFiSSLClient.h>
+#include <IPAddress.h>
+#include <ArduinoJson.h>
 #include "arduino_secrets.h"
 
 const int cyanChannel = 9;
@@ -21,13 +24,18 @@ String previousResponse = "";
 
 char ssid[] = MY_SECRET_SSID;
 char pass[] = MY_SECRET_PASSWORD;
-char serverAddress[] = "192.168.139.175";
+char serverAddress[] = "192.168.197.191";
+const char* azureHost = "recyclingchatbot-ezekdechdaagg4bx.germanywestcentral-01.azurewebsites.net";
+const char* azurePath = "/api/AIAssistant/message";
+int securePort = 443;
 int port = 5000;
 
 WiFiClient wifi;
 HttpClient client = HttpClient(wifi, serverAddress, port);
+WiFiSSLClient sslClient;
 
-Stepper myStepper = Stepper(stepsPerRevolution, 4, 5, 6, 7);
+
+Stepper myStepper = Stepper(stepsPerRevolution, 4, 6, 5, 7);
 
 void setup()
 {
@@ -62,6 +70,7 @@ void loop()
 
   if (statusCode > 0) {
     if(response != previousResponse) {
+      sendToAzure(response);
       if(response == "paper" || response == "cardboard") {
         setColor(255, 255, 0);
         moveTo(BLUE);
@@ -93,7 +102,7 @@ void moveTo(Position target) {
   int deltaSlots = int(target) - currentSlot;
 
   int stepsToMove = deltaSlots * stepsPerRevolution;
-  myStepper.step(stepsToMove);
+  myStepper.step(-stepsToMove);
   currentSlot = target;
 }
 
@@ -119,4 +128,58 @@ void connectToWiFi() {
   Serial.println("Connected to WiFi!");
   Serial.print("IP address: ");
   Serial.println(WiFi.localIP());
+}
+
+void sendToAzure(String message) {
+  Serial.println("\nSending to Azure server...");
+  
+  if (sslClient.connect(azureHost, securePort)) {
+    Serial.println("Connected to Azure server");
+    
+    // Create JSON body
+    StaticJsonDocument<200> jsonDoc;
+    jsonDoc["textMessage"] = message;
+    
+    String jsonBody;
+    serializeJson(jsonDoc, jsonBody);
+    
+    sslClient.print("POST ");
+    sslClient.print(azurePath);
+    sslClient.println(" HTTP/1.1");
+    
+    sslClient.print("Host: ");
+    sslClient.println(azureHost);
+    
+    sslClient.println("Content-Type: application/json");
+    sslClient.print("Content-Length: ");
+    sslClient.println(jsonBody.length());
+    sslClient.println("Connection: close");
+    sslClient.println();
+    sslClient.println(jsonBody);
+    
+    Serial.println("HTTP request sent to Azure:");
+    Serial.print("POST ");
+    Serial.print(azurePath);
+    Serial.println(" HTTP/1.1");
+    Serial.print("Host: ");
+    Serial.println(azureHost);
+    Serial.println("Content-Type: application/json");
+    Serial.print("Content-Length: ");
+    Serial.println(jsonBody.length());
+    Serial.println("Request body: " + jsonBody);
+    
+    unsigned long timeout = millis();
+    while (sslClient.connected() && millis() - timeout < 5000) {
+      if (sslClient.available()) {
+        String line = sslClient.readStringUntil('\n');
+        Serial.print("Azure response: ");
+        Serial.println(line);
+      }
+    }
+    
+    sslClient.stop();
+    Serial.println("Disconnected from Azure server");
+  } else {
+    Serial.println("Failed to connect to Azure server");
+  }
 }
